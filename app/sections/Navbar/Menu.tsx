@@ -21,7 +21,7 @@ const Menu = () => {
 
         <div
           onClick={toggleOpen}
-          className="gap-3 p-2 border rounded-full cursor-pointer flex-center hover: border-neutral hover:shadow-md md:px-2 md:py-1 "
+          className="flex-center hover: cursor-pointer gap-3 rounded-full border-[5px] border-gray-600 p-2 hover:shadow-md md:px-2 md:py-1"
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
