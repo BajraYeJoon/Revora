@@ -4,8 +4,11 @@ import Avatar from "@/app/components/Avatar/Avatar";
 import { useCallback, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import MenuItem from "./MenuItem";
+import useRegisterProvider from "@/app/hooks/useRegisterProvider";
 
 const Menu = () => {
+  const registerModal = useRegisterProvider();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
@@ -14,14 +17,14 @@ const Menu = () => {
 
   return (
     <div className="relative">
-      <div className="gap-1 flex-center">
-        <div className="hidden px-4 py-1 text-xs font-medium transition rounded-full cursor-pointer text-primary hover:bg-neutral md:block">
+      <div className="flex-center gap-1">
+        <div className="hidden cursor-pointer rounded-full px-4 py-1 text-xs font-medium text-primary transition hover:bg-neutral md:block">
           Register Homestay
         </div>
 
         <div
           onClick={toggleOpen}
-          className="gap-3 p-2 border rounded-full cursor-pointer flex-center hover: border-neutral hover:shadow-md md:px-2 md:py-1 "
+          className="flex-center hover: cursor-pointer gap-3 rounded-full border-[5px] border-gray-600 p-2 hover:shadow-md md:px-2 md:py-1"
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
@@ -34,10 +37,10 @@ const Menu = () => {
         // Menu Dropdown
         isOpen && (
           <div className="absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-neutral text-sm shadow-md md:w-3/4">
-            <div className="flex flex-col cursor-pointer">
+            <div className="flex cursor-pointer flex-col">
               <>
                 <MenuItem onClick={() => {}} label="login" />
-                <MenuItem onClick={() => {}} label="Sign Up" />
+                <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
               </>
             </div>
           </div>
