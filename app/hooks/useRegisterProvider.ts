@@ -1,4 +1,4 @@
-import { createStore } from "zustand";
+import { create } from "zustand";
 
 interface IRegisterState {
   isOpen: boolean;
@@ -6,7 +6,7 @@ interface IRegisterState {
   onClose: () => void;
 }
 
-const useRegisterProvider = createStore<IRegisterState>((set) => ({
+const useRegisterProvider = create<IRegisterState>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),

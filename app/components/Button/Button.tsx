@@ -1,5 +1,5 @@
 "use client";
-import { IconType } from "react-icons/lib";
+import { IconType } from "react-icons";
 
 interface ButtonProps {
   label: string;
@@ -10,26 +10,26 @@ interface ButtonProps {
   icon?: IconType;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const Button = ({
   label,
   onClick,
   disabled,
   outline,
   small,
   icon: Icon,
-}) => {
+}: ButtonProps) => {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
       className={`
-      disbaled:opacity-50
       relative
       w-full
       rounded-lg
       transition
       hover:opacity-80
-      disabled:cursor-not-allowed 
+      disabled:cursor-not-allowed
+      disabled:opacity-50 
       ${outline ? "bg-neutral" : "bg-info"}
       ${outline ? "border-black" : "border-info"}
       ${outline ? "text-black" : "text-neutral"}

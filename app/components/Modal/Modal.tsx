@@ -17,7 +17,7 @@ interface ModalProps {
   secondaryActionLabel?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const Modal = ({
   isOpen,
   onClose,
   onSubmit,
@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({
   secondaryAction,
   secondaryActionLabel,
   body,
-}) => {
+}: ModalProps) => {
   const [showModal, setShowModal] = useState(isOpen);
 
   useEffect(() => {
@@ -72,8 +72,8 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none bg-blue-800/40 focus:outline-none">
-        <div className="relative w-full h-full mx-auto my-6 md:h-auto md:w-4/6 lg:w-3/6 xl:w-2/5">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-blue-800/40 outline-none focus:outline-none">
+        <div className="relative mx-auto my-6 h-full w-full md:h-auto md:w-4/6 lg:w-3/6 xl:w-2/5">
           {/*content*/}
           <div
             className={`
@@ -83,22 +83,22 @@ const Modal: React.FC<ModalProps> = ({
                ${showModal ? "opacity-100" : "opacity-0"}
              `}
           >
-            <div className="relative flex flex-col w-full h-full border-0 rounded-lg shadow-lg outline-none translate bg-neutral focus:outline-none md:h-auto lg:h-auto">
+            <div className="translate relative flex h-full w-full flex-col rounded-lg border-0 bg-neutral shadow-lg outline-none focus:outline-none md:h-auto lg:h-auto">
               {/*header*/}
 
               <div
                 className="
-                 relative flex flex-col items-center justify-center rounded-t border-b-[1px] p-6
+                 relative flex flex-col rounded-t border-b-[1px] p-6
               "
               >
                 <button
-                  className="absolute p-1 transition border-0 left-10 top-7 hover:opacity-70"
+                  className="absolute left-10 top-7 border-0 p-1 transition hover:opacity-70"
                   onClick={handleCancel}
                 >
                   <AiOutlineClose size={18} />
                 </button>
 
-                <div className="text-lg font-semibold text-center text-accent">
+                <div className="text-center text-lg font-semibold text-accent">
                   {title}
                 </div>
 
@@ -106,8 +106,8 @@ const Modal: React.FC<ModalProps> = ({
                 <div className="relative flex-auto p-6">{body}</div>
 
                 {/* footer */}
-                <div className="flex flex-col w-full gap-2 p-6">
-                  <div className="w-full gap-4 flex-center">
+                <div className="flex w-full flex-col gap-2 p-6">
+                  <div className="flex-center w-full gap-4">
                     {secondaryAction && secondaryActionLabel && (
                       <Button
                         outline
@@ -123,6 +123,7 @@ const Modal: React.FC<ModalProps> = ({
                       onClick={handleConfirm}
                     />
                   </div>
+                  {footer}
                 </div>
               </div>
             </div>
