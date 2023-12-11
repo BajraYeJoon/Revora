@@ -3,8 +3,8 @@ import "./globals.css";
 import Navbar from "./sections/Navbar/Navbar";
 import Modal from "./components/Modal/Modal";
 import RegisterModal from "./components/Modal/RegisterModal";
-import { ApolloWrapper } from "./lib/client";
 import NotifyToastProvider from "./providers/NotifyToast";
+import { GraphqlProvider } from "./providers/GraphqlProvider";
 
 const monsterrat = Montserrat({ subsets: ["latin"] });
 
@@ -21,13 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={monsterrat.className}>
-        <ApolloWrapper>
+        <GraphqlProvider>
           <NotifyToastProvider />
           <RegisterModal />
           <Navbar />
 
           {children}
-        </ApolloWrapper>
+        </GraphqlProvider>
       </body>
     </html>
   );
