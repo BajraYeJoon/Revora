@@ -11,6 +11,7 @@ import Heading from "../Heading/Heading";
 import CustomInput from "../CustomInput/CustomInput";
 import Button from "../Button/Button";
 import { REGISTER_MUTATION } from "@/GQL/mutation";
+import useLoginProvider from "@/app/hooks/useLoginProvider";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface RegisterModalProps {
 
 const RegisterModal = (props: RegisterModalProps) => {
   const registerModal = useRegisterProvider();
+  const loginModal = useLoginProvider();
   const [registerQuery, { loading, error }] = useMutation(REGISTER_MUTATION);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -99,7 +101,10 @@ const RegisterModal = (props: RegisterModalProps) => {
         <div>Already have an account?</div>
         <div
           className="text-neutral-800 cursor-pointer hover:underline"
-          onClick={registerModal.onClose}
+          onClick={() => {
+            loginModal.onOpen();
+            registerModal.onClose();
+          }}
         >
           Log in
         </div>
