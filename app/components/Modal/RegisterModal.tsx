@@ -1,37 +1,27 @@
 "use client";
 
-import { AiFillGithub } from "react-icons/ai";
-import { FaGoogle } from "react-icons/fa";
-import { useCallback, useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useState } from "react";
+import { useMutation } from "@apollo/client";
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
-
+import { toast } from "react-toastify";
+import { AiFillGithub } from "react-icons/ai";
 import useRegisterProvider from "@/app/hooks/useRegisterProvider";
 import Modal from "./Modal";
 import Heading from "../Heading/Heading";
 import CustomInput from "../CustomInput/CustomInput";
-import { toast } from "react-toastify";
 import Button from "../Button/Button";
+import { REGISTER_MUTATION } from "@/GQL/mutation";
 
-const REGISTER_MUTATION = gql`
-  mutation RegisterMutation($input: RegisterInput!) {
-    register(input: $input) {
-      id
-      success
-    }
-  }
-`;
-
-interface RegisterModalProps {}
+interface RegisterModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
 const RegisterModal = (props: RegisterModalProps) => {
   const registerModal = useRegisterProvider();
-
-  const [registerQuery, { loading }] = useMutation(REGISTER_MUTATION);
-  //Auth state
+  const [registerQuery, { loading, error }] = useMutation(REGISTER_MUTATION);
   const [isLoading, setIsLoading] = useState(false);
 
-  //Form state
   const {
     register,
     handleSubmit,
@@ -108,9 +98,7 @@ const RegisterModal = (props: RegisterModalProps) => {
       <div className="flex flex-row items-center justify-center gap-3">
         <div>Already have an account?</div>
         <div
-          className="text-neutral-800 cursor-pointer hover:underline
-         
-        "
+          className="text-neutral-800 cursor-pointer hover:underline"
           onClick={registerModal.onClose}
         >
           Log in
