@@ -29,9 +29,7 @@ const CustomInput = ({
       {formatPrice && (
         <BiDollar
           size={20}
-          className="
-        text-neutral-700 absolute left-2 top-5
-      "
+          className="text-neutral-700 absolute left-2 top-5"
         />
       )}
       <input
@@ -40,13 +38,10 @@ const CustomInput = ({
         {...register(id, { required })}
         placeholder=" "
         type={type}
-        className={`
-          peer w-full rounded-md border-2 bg-white p-4 pt-6 
-          font-light 
-          outline-none transition disabled:cursor-not-allowed disabled:opacity-70 
-          ${formatPrice ? "pl-10" : "pl-4"}
+        className={`peer w-full rounded-md border-2 bg-white p-4 pt-6 font-light transition marker:outline-none disabled:cursor-not-allowed disabled:opacity-70 
+            ${formatPrice ? "pl-10" : "pl-4"}
             ${errors[id] ? "border-red-500" : "border-neutral-300"}
-            ${errors[id] ? "focus:border-red-500" : "focus:border-black"}
+            ${errors[id] ? "focus:border-red-500" : "focus:border-black"} 
         `}
       />
       <label
