@@ -6,8 +6,14 @@ import { AiOutlineMenu } from "react-icons/ai";
 import MenuItem from "./MenuItem";
 import useRegisterProvider from "@/app/hooks/useRegisterProvider";
 import useLoginProvider from "@/app/hooks/useLoginProvider";
+import { signOut } from "next-auth/react";
+import { SafeUser } from "@/app/types";
 
-const Menu = () => {
+interface MenuProps {
+  currentUser?: SafeUser | null;
+}
+
+const Menu = ({ currentUser }: MenuProps) => {
   const registerModal = useRegisterProvider();
   const loginModal = useLoginProvider();
 
@@ -40,10 +46,21 @@ const Menu = () => {
         isOpen && (
           <div className="absolute right-0 top-12 w-[40vw] overflow-hidden rounded-xl bg-neutral text-sm shadow-md md:w-3/4">
             <div className="flex cursor-pointer flex-col">
-              <>
-                <MenuItem onClick={loginModal.onOpen} label="Login" />
-                <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
-              </>
+              {currentUser ? (
+                <>
+                  <MenuItem onClick={() => {}} label="My History" />
+                  <MenuItem onClick={() => {}} label="Favorites" />
+                  <MenuItem onClick={() => {}} label="Reservations" />
+                  <MenuItem onClick={() => {}} label="Places" />
+                  <hr />
+                  <MenuItem onClick={() => signOut()} label="Logout" />
+                </>
+              ) : (
+                <>
+                  <MenuItem onClick={loginModal.onOpen} label="Login" />
+                  <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
+                </>
+              )}
             </div>
           </div>
         )

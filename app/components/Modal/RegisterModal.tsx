@@ -11,6 +11,8 @@ import Heading from "../Heading/Heading";
 import CustomInput from "../CustomInput/CustomInput";
 import Button from "../Button/Button";
 import { REGISTER_MUTATION } from "@/GQL/mutation";
+import useLoginProvider from "@/app/hooks/useLoginProvider";
+import { signIn } from "next-auth/react";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -19,6 +21,7 @@ interface RegisterModalProps {
 
 const RegisterModal = (props: RegisterModalProps) => {
   const registerModal = useRegisterProvider();
+  const loginModal = useLoginProvider();
   const [registerQuery, { loading, error }] = useMutation(REGISTER_MUTATION);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -92,14 +95,17 @@ const RegisterModal = (props: RegisterModalProps) => {
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn("github")}
       />
 
       <div className="flex flex-row items-center justify-center gap-3">
         <div>Already have an account?</div>
         <div
           className="text-neutral-800 cursor-pointer hover:underline"
-          onClick={registerModal.onClose}
+          onClick={() => {
+            loginModal.onOpen();
+            registerModal.onClose();
+          }}
         >
           Log in
         </div>
@@ -112,7 +118,7 @@ const RegisterModal = (props: RegisterModalProps) => {
       disabled={isLoading}
       isOpen={registerModal.isOpen}
       title="Register"
-      actionLabel="Cotinue"
+      actionLabel="Continue"
       onClose={registerModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
