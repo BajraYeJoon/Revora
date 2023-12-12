@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
@@ -12,16 +13,18 @@ import CustomInput from "../CustomInput/CustomInput";
 import Button from "../Button/Button";
 import { REGISTER_MUTATION } from "@/GQL/mutation";
 import useLoginProvider from "@/app/hooks/useLoginProvider";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-interface RegisterModalProps {
+interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const RegisterModal = (props: RegisterModalProps) => {
+const LoginModal = (props: LoginModalProps) => {
+  const router = useRouter();
   const registerModal = useRegisterProvider();
   const loginModal = useLoginProvider();
+
   const [registerQuery, { loading, error }] = useMutation(REGISTER_MUTATION);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +34,6 @@ const RegisterModal = (props: RegisterModalProps) => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
@@ -40,25 +42,27 @@ const RegisterModal = (props: RegisterModalProps) => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
-    registerQuery({
-      variables: {
-        input: data,
-      },
-    })
-      .then((res) => {
-        registerModal.onClose();
-        toast.success("noted");
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("error");
-      })
-      .finally(() => setIsLoading(false));
+    signIn("credentials", {
+      ...data,
+      redirect: false,
+    }).then((cb) => {
+      setIsLoading(false);
+
+      if (cb?.ok) {
+        toast.success("Login Success");
+        router.refresh();
+        loginModal.onClose();
+      }
+
+      if (cb?.error) {
+        toast.error("Login Failed");
+      }
+    });
   };
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading title="Welcome to Revora" subtitle="Sign up to continue" />
+      <Heading title="Welcome back" subtitle="Login to your account" />
 
       <CustomInput
         id="email"
@@ -68,14 +72,7 @@ const RegisterModal = (props: RegisterModalProps) => {
         errors={errors}
         required
       />
-      <CustomInput
-        id="name"
-        label="Name"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-      />
+
       <CustomInput
         id="password"
         label="Password"
@@ -99,15 +96,15 @@ const RegisterModal = (props: RegisterModalProps) => {
       />
 
       <div className="flex flex-row items-center justify-center gap-3">
-        <div>Already have an account?</div>
+        <div>Don&apos;t have an account?</div>
         <div
           className="text-neutral-800 cursor-pointer hover:underline"
           onClick={() => {
-            loginModal.onOpen();
-            registerModal.onClose();
+            loginModal.onClose();
+            registerModal.onOpen();
           }}
         >
-          Log in
+          Sign Up
         </div>
       </div>
     </div>
@@ -116,10 +113,10 @@ const RegisterModal = (props: RegisterModalProps) => {
   return (
     <Modal
       disabled={isLoading}
-      isOpen={registerModal.isOpen}
-      title="Register"
+      isOpen={loginModal.isOpen}
+      title="Login"
       actionLabel="Continue"
-      onClose={registerModal.onClose}
+      onClose={loginModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
       footer={footerContent}
@@ -127,4 +124,4 @@ const RegisterModal = (props: RegisterModalProps) => {
   );
 };
 
-export default RegisterModal;
+export default LoginModal;

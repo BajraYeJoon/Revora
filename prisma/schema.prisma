@@ -13,7 +13,7 @@ datasource db {
 model User {
   id             String    @id @default(uuid())
   name           String?
-  email          String    @unique
+  email          String?   @unique
   emailVerified  DateTime?
   image          String?
   createdAt      DateTime  @default(now())
@@ -41,7 +41,7 @@ model Account {
   idToken            String? @db.Text
   sessionState       String?
 
-  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -58,21 +58,22 @@ model Listing {
   location      String
   amenities     String[]
   createdAt     DateTime @default(now())
-  User          User?    @relation(fields: [userId], references: [id])
-  userId        String?
 
+  userId String
+
+  user         User          @relation(fields: [userId], references: [id])
   reservations Reservation[]
 }
 
 model Reservation {
   id         String   @id @default(uuid())
-  userId     String?
-  listingId  String?
+  userId     String
+  listingId  String
   startDate  DateTime
   endDate    DateTime
   totalPrice Int
   createdAt  DateTime @default(now())
 
-  Listing Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  User    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
