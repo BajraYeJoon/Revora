@@ -12,6 +12,7 @@ import CustomInput from "../CustomInput/CustomInput";
 import Button from "../Button/Button";
 import { REGISTER_MUTATION } from "@/GQL/mutation";
 import useLoginProvider from "@/app/hooks/useLoginProvider";
+import { signIn } from "next-auth/react";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -94,7 +95,7 @@ const RegisterModal = (props: RegisterModalProps) => {
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn("github")}
       />
 
       <div className="flex flex-row items-center justify-center gap-3">
@@ -117,7 +118,7 @@ const RegisterModal = (props: RegisterModalProps) => {
       disabled={isLoading}
       isOpen={registerModal.isOpen}
       title="Register"
-      actionLabel="Cotinue"
+      actionLabel="Continue"
       onClose={registerModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}

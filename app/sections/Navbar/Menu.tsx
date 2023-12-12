@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@prisma/client";
 import Avatar from "@/app/components/Avatar/Avatar";
 import { useCallback, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -8,9 +7,10 @@ import MenuItem from "./MenuItem";
 import useRegisterProvider from "@/app/hooks/useRegisterProvider";
 import useLoginProvider from "@/app/hooks/useLoginProvider";
 import { signOut } from "next-auth/react";
+import { SafeUser } from "@/app/types";
 
 interface MenuProps {
-  currentUser?: User | null;
+  currentUser?: SafeUser | null;
 }
 
 const Menu = ({ currentUser }: MenuProps) => {
