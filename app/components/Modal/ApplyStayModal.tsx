@@ -8,6 +8,7 @@ import { categories } from "@/app/sections/CategoryBar/CategoryBar";
 import CategoryInput from "../CustomInput/CategoryInput";
 import { useForm, FieldValues } from "react-hook-form";
 import CountrySelect from "../CustomInput/CountrySelect";
+import dynamic from "next/dynamic";
 
 enum FORMSTEPS {
   CATEGORY = 0,
@@ -51,6 +52,14 @@ const ApplyStayModal = () => {
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
   const listingImage = watch("listingImage");
+
+  const CountryMap = useMemo(
+    () =>
+      dynamic(() => import("../CountryMap/CountryMap"), {
+        ssr: false,
+      }),
+    [location]
+  );
 
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -115,7 +124,12 @@ const ApplyStayModal = () => {
           title="Where's your place located?"
           subtitle="Enter the address !"
         />
-        <CountrySelect />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue("location", value)}
+        />
+
+        <CountryMap center={location?.latlng} />
       </div>
     );
   }
