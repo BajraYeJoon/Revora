@@ -7,6 +7,8 @@ import Heading from "../Heading/Heading";
 import { categories } from "@/app/sections/CategoryBar/CategoryBar";
 import CategoryInput from "../CustomInput/CategoryInput";
 import { useForm, FieldValues } from "react-hook-form";
+import CountrySelect from "../CustomInput/CountrySelect";
+import dynamic from "next/dynamic";
 
 enum FORMSTEPS {
   CATEGORY = 0,
@@ -50,6 +52,14 @@ const ApplyStayModal = () => {
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
   const listingImage = watch("listingImage");
+
+  const CountryMap = useMemo(
+    () =>
+      dynamic(() => import("../CountryMap/CountryMap"), {
+        ssr: false,
+      }),
+    [location]
+  );
 
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -107,12 +117,29 @@ const ApplyStayModal = () => {
     </div>
   );
 
+  if (formStep === FORMSTEPS.LOCATION) {
+    bodyContent = (
+      <div className="flex flex-col gap-6">
+        <Heading
+          title="Where's your place located?"
+          subtitle="Enter the address !"
+        />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue("location", value)}
+        />
+
+        <CountryMap center={location?.latlng} />
+      </div>
+    );
+  }
+
   return (
     <Modal
       title="Register Your Place"
       isOpen={vacRegPlace?.isOpen}
       onClose={vacRegPlace?.onClose}
-      onSubmit={vacRegPlace?.onClose}
+      onSubmit={onNext}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={formStep === FORMSTEPS?.CATEGORY ? undefined : onBack}
