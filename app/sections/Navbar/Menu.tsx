@@ -8,6 +8,7 @@ import useRegisterProvider from "@/app/hooks/useRegisterProvider";
 import useLoginProvider from "@/app/hooks/useLoginProvider";
 import { signOut } from "next-auth/react";
 import { SafeUser } from "@/app/types";
+import useStayApply from "@/app/hooks/useStayApply";
 
 interface MenuProps {
   currentUser?: SafeUser | null;
@@ -18,12 +19,20 @@ const Menu = ({ currentUser }: MenuProps) => {
 
   const registerModal = useRegisterProvider();
   const loginModal = useLoginProvider();
-
+  const vacRegPlace = useStayApply();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
+
+  const onRent = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    vacRegPlace.onOpen();
+  }, [currentUser, loginModal, vacRegPlace]);
 
   useEffect(() => {
     const handleClickOutside = (e: any) => {
@@ -41,13 +50,33 @@ const Menu = ({ currentUser }: MenuProps) => {
 
   return (
     <div className="relative" ref={modal}>
-      <div
-        onClick={toggleOpen}
-        className="flex-center hover: cursor-pointer gap-3 rounded-full border-[5px] border-gray-600 p-2 hover:shadow-md md:px-2 md:py-1"
-      >
-        <AiOutlineMenu />
-        <div className="hidden md:block">
-          <Avatar />
+      <div className="flex flex-row items-center gap-3">
+        <div
+          onClick={onRent}
+          className="
+          hidden
+            cursor-pointer
+            rounded-full
+            px-4 
+            py-3 
+            text-xs
+            font-semibold 
+            text-primary 
+            transition 
+            hover:text-primary/80 
+            md:block
+          "
+        >
+          Register Your Place?
+        </div>
+        <div
+          onClick={toggleOpen}
+          className="flex-center hover: cursor-pointer gap-3 rounded-full  p-2 hover:shadow-md md:px-2 md:py-1"
+        >
+          <AiOutlineMenu />
+          <div className="hidden md:block">
+            <Avatar />
+          </div>
         </div>
       </div>
 
@@ -62,6 +91,11 @@ const Menu = ({ currentUser }: MenuProps) => {
                   <MenuItem onClick={() => {}} label="Favorites" />
                   <MenuItem onClick={() => {}} label="Reservations" />
                   <MenuItem onClick={() => {}} label="Places" />
+                  <MenuItem
+                    onClick={vacRegPlace.onOpen}
+                    label="Register your place"
+                  />
+
                   <hr />
                   <MenuItem onClick={() => signOut()} label="Logout" />
                 </>

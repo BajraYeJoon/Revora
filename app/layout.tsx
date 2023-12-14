@@ -7,6 +7,7 @@ import { GraphqlProvider } from "./providers/GraphqlProvider";
 import getCurrentUser from "./lib/actions/getCurrentUserInfo";
 
 import LoginModal from "./components/Modal/LoginModal";
+import ApplyStayModal from "./components/Modal/ApplyStayModal";
 
 const monsterrat = Montserrat({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <NotifyToastProvider />
           <LoginModal />
           <RegisterModal />
+          <ApplyStayModal />
 
           {children}
         </GraphqlProvider>
