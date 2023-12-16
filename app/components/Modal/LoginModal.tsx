@@ -24,8 +24,6 @@ const LoginModal = (props: LoginModalProps) => {
   const router = useRouter();
   const registerModal = useRegisterProvider();
   const loginModal = useLoginProvider();
-
-  const [registerQuery, { loading, error }] = useMutation(REGISTER_MUTATION);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
