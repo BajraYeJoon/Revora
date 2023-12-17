@@ -9,6 +9,7 @@ import CategoryInput from "../CustomInput/CategoryInput";
 import { useForm, FieldValues } from "react-hook-form";
 import CountrySelect from "../CustomInput/CountrySelect";
 import dynamic from "next/dynamic";
+import Counter from "../CustomInput/Counter";
 
 enum FORMSTEPS {
   CATEGORY = 0,
@@ -130,6 +131,18 @@ const ApplyStayModal = () => {
         />
 
         <CountryMap center={location?.latlng} />
+      </div>
+    );
+  }
+
+  if (formStep === FORMSTEPS.INFO) {
+    bodyContent = (
+      <div className="flex flex-col gap-7">
+        <Heading
+          title="Share some details about your place"
+          subtitle="Tell guests about the space, amenities, and the neighborhood."
+        />
+        <Counter />
       </div>
     );
   }
