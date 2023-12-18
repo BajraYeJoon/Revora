@@ -1,5 +1,7 @@
+import getCurrentUser from "@/app/lib/actions/getCurrentUserInfo";
 import { Context } from "@/pages/api/graphql";
 import bcrypt from "bcrypt";
+import { User } from "@prisma/client";
 
 export const resolvers = {
   Query: {
@@ -27,6 +29,43 @@ export const resolvers = {
       });
 
       return user;
+    },
+
+    createListing: async (_: any, args: any, context: Context) => {
+      const currentUser = await getCurrentUser(context);
+
+      if (!currentUser) {
+        throw new Error("Not authenticated");
+      }
+
+      const {
+        title,
+        description,
+        listingImage,
+        category,
+        roomCount,
+        bathroomCount,
+        maxGuests,
+        location,
+        price,
+      } = args.input;
+
+      const listing = await context.prisma.listing.create({
+        data: {
+          title,
+          description,
+          listingImage,
+          category,
+          roomCount,
+          bathroomCount,
+          maxGuests,
+          location: location.value,
+          price: parseInt(price, 10),
+          userId: currentUser.id,
+        },
+      });
+
+      return listing;
     },
   },
 };

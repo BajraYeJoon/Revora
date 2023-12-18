@@ -9,3 +9,21 @@ export const GET_USERS = gql`
     }
   }
 `;
+
+export const GET_LISTINGS = gql`
+  query Listings {
+    listings {
+      id
+      title
+      description
+      imageSrc
+      category
+      roomCount
+      bathroomCount
+      guestCount
+      location
+      price
+      userId
+    }
+  }
+`;

@@ -6,11 +6,17 @@ import useStayApply from "@/app/hooks/useStayApply";
 import Heading from "../Heading/Heading";
 import { categories } from "@/app/sections/CategoryBar/CategoryBar";
 import CategoryInput from "../CustomInput/CategoryInput";
-import { useForm, FieldValues } from "react-hook-form";
+import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import CountrySelect from "../CustomInput/CountrySelect";
 import dynamic from "next/dynamic";
 import Counter from "../CustomInput/Counter";
 import UploadImage from "../UploadImage/UploadImage";
+import CustomInput from "../CustomInput/CustomInput";
+import axios from "axios";
+import { useMutation } from "@apollo/client";
+import { CREATE_LISTING_MUTATION } from "@/GQL/mutation";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 enum FORMSTEPS {
   CATEGORY = 0,
@@ -24,7 +30,10 @@ enum FORMSTEPS {
 const ApplyStayModal = () => {
   const vacRegPlace = useStayApply();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const [formStep, setFormStep] = useState(FORMSTEPS.CATEGORY);
+  const [createListing, { loading }] = useMutation(CREATE_LISTING_MUTATION);
 
   //validation
   const {
@@ -77,6 +86,44 @@ const ApplyStayModal = () => {
 
   const onNext = () => {
     setFormStep((prev) => prev + 1);
+  };
+
+  //onSubmit
+  const onSubmit: SubmitHandler<FieldValues> = async (data: any) => {
+    if (formStep !== FORMSTEPS?.PRICE) {
+      return onNext();
+    }
+
+    setIsLoading(true);
+
+    const { location, ...otherFields } = data;
+    const locationValue = location.value;
+
+    createListing({
+      variables: {
+        input: {
+          ...otherFields,
+          location: locationValue,
+          maxGuests: parseInt(data?.maxGuests),
+          roomCount: parseInt(data?.roomCount),
+          bathroomCount: parseInt(data?.bathroomCount),
+          price: parseInt(data?.price),
+        },
+      },
+    })
+      .then((res) => {
+        toast.success("Listing created successfully");
+        router.refresh();
+        vacRegPlace.onClose();
+        setFormStep(FORMSTEPS.CATEGORY);
+        reset();
+      })
+      .catch((err) => {
+        toast.error(err?.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   // action labels
@@ -175,7 +222,61 @@ const ApplyStayModal = () => {
           subtitle="Upload a photo that clearly shows the space and entrance to your place."
         />
 
-        <UploadImage />
+        <UploadImage
+          image={listingImage}
+          onChange={(value) => setCustomValue("listingImage", value)}
+        />
+      </div>
+    );
+  }
+
+  if (formStep === FORMSTEPS.DESCRIPTION) {
+    bodyContent = (
+      <div className="flex flex-col gap-6">
+        <Heading
+          title="Describe your place to guests"
+          subtitle="Write a detailed description to help guests know what to expect."
+        />
+
+        <CustomInput
+          id="title"
+          label="Title"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+        <hr />
+        <CustomInput
+          id="description"
+          label="Description"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+      </div>
+    );
+  }
+
+  if (formStep === FORMSTEPS.PRICE) {
+    bodyContent = (
+      <div className="flex flex-col gap-6">
+        <Heading
+          title="How much do you want to charge?"
+          subtitle="Set a price that reflects your space's value."
+        />
+
+        <CustomInput
+          id="price"
+          label="Price"
+          type="number"
+          formatPrice
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
       </div>
     );
   }
@@ -185,7 +286,7 @@ const ApplyStayModal = () => {
       title="Register Your Place"
       isOpen={vacRegPlace?.isOpen}
       onClose={vacRegPlace?.onClose}
-      onSubmit={onNext}
+      onSubmit={handleSubmit(onSubmit)}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={formStep === FORMSTEPS?.CATEGORY ? undefined : onBack}
