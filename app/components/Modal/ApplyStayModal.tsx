@@ -10,6 +10,7 @@ import { useForm, FieldValues } from "react-hook-form";
 import CountrySelect from "../CustomInput/CountrySelect";
 import dynamic from "next/dynamic";
 import Counter from "../CustomInput/Counter";
+import UploadImage from "../UploadImage/UploadImage";
 
 enum FORMSTEPS {
   CATEGORY = 0,
@@ -142,7 +143,39 @@ const ApplyStayModal = () => {
           title="Share some details about your place"
           subtitle="Tell guests about the space, amenities, and the neighborhood."
         />
-        <Counter />
+        <Counter
+          title="Number of Guests"
+          subtitle="How many guests can your place accommodate?"
+          value={maxGuests}
+          onChange={(value) => setCustomValue("maxGuests", value)}
+        />
+        <hr />
+        <Counter
+          title="Rooms"
+          subtitle="How many rooms can guests use?"
+          value={roomCount}
+          onChange={(value) => setCustomValue("roomCount", value)}
+        />
+        <hr />
+        <Counter
+          title="Bathrooms"
+          subtitle="How many bathrooms can guests use?"
+          value={bathroomCount}
+          onChange={(value) => setCustomValue("bathroomCount", value)}
+        />
+      </div>
+    );
+  }
+
+  if (formStep === FORMSTEPS.IMAGES) {
+    bodyContent = (
+      <div className="flex flex-col gap-6">
+        <Heading
+          title="Upload your listing image"
+          subtitle="Upload a photo that clearly shows the space and entrance to your place."
+        />
+
+        <UploadImage />
       </div>
     );
   }
