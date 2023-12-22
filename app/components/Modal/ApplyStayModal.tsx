@@ -95,20 +95,9 @@ const ApplyStayModal = () => {
     }
 
     setIsLoading(true);
-
-    const { location, ...otherFields } = data;
-    const locationValue = location.value;
-
     createListing({
       variables: {
-        input: {
-          ...otherFields,
-          location: locationValue,
-          maxGuests: parseInt(data?.maxGuests),
-          roomCount: parseInt(data?.roomCount),
-          bathroomCount: parseInt(data?.bathroomCount),
-          price: parseInt(data?.price),
-        },
+        input: data,
       },
     })
       .then((res) => {

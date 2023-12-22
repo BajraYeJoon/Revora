@@ -32,7 +32,7 @@ export const resolvers = {
     },
 
     createListing: async (_: any, args: any, context: Context) => {
-      const currentUser = await getCurrentUser(context);
+      const currentUser = await getCurrentUser();
 
       if (!currentUser) {
         throw new Error("Not authenticated");

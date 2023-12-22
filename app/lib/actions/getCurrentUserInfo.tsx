@@ -3,13 +3,12 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { prisma } from "@/app/lib/prismadb";
-import { Context } from "@/pages/api/graphql"; // Update with the correct path
 
 export async function getSession() {
   return await getServerSession(authOptions);
 }
 
-export default async function getCurrentUser(context: Context) {
+export default async function getCurrentUser() {
   try {
     const session = await getSession();
 

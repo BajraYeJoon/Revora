@@ -24,6 +24,14 @@ export const typeDefs = `
     createListing(input: CreateListingInput!): Listing!
   }
   
+  input LocationInput {
+    value: String!
+    label: String!
+    flag: String!
+    latlng: [Float!]!
+    region: String!
+  }
+
   input CreateListingInput {
     title: String!
     description: String!
@@ -32,8 +40,8 @@ export const typeDefs = `
     roomCount: Int!
     bathroomCount: Int!
     maxGuests: Int!
-    location: String!
-    price: Int!
+    location: LocationInput!
+    price: String!
   }
   
   type Listing {
